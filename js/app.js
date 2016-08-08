@@ -5,32 +5,67 @@ $(document).ready(function() {
         record,
         score = 0;
 
-    var questions = [{
-        label: 'Question 1: What has been the most ridiculous event that occurred which started a war?',
-        options: ['Conflict over stolen flip-flops', 'Soccer game result dispute', 'War over a bucket', 'Dictator angry about losing in Mortal Kombat'],
-        answer: 2,
-        img: 'img/bucket.png'
-    }, {
-        label: 'Question 2: Which animal defeated an army?',
-        options: ['Lion', 'Hyena', 'Gyrados', 'Emu'],
-        answer: 3,
-        img: 'img/emu.jpg'
-    }, {
-        label: 'Question 3: What useless commodity caused an economic in the 1600s?',
-        options: ['Tulips', 'Bellsprout', 'Hurricane Drift Wood', 'Oil'],
-        answer: 0,
-        img: 'img/tulips.jpg'
-    }, {
-        label: 'Question 4: Who is the greatest dictator opera writer?',
-        options: ['Joseph Stalin', 'Shaka Zulu', 'Emperor Xenu', 'Kim Jong Il'],
-        answer: 3,
-        img: 'img/Kim.jpg'
-    }, {
-        label: 'Question 5: What was Hitler\'s moustache called?',
-        options: ['Handlebar moustache', 'Toothbrush moustache', 'Eddga moustache', 'Schuckle moustache'],
-        answer: 1,
-        img: 'img/hitler.jpg'
-    }]
+    // var questions = [{
+    //     label: 'Question 1: Do ye like yer drinks strong?',
+    //     options: ['Yes', 'No'],
+
+    // }, {
+    //     label: 'Question 2: Do ye like it with a salty tang?',
+    //     options: ['Yes', 'No'],
+
+    // }, {
+    //     label: 'Question 3: Are ye a lubber who likes it bitter?',
+    //     options: ['Yes', 'No'],
+
+    // }, {
+    //     label: 'Question 4: Would ye like a bit of sweetness with yer poison?',
+    //     options: ['Yes', 'No'],
+
+    // }, {
+    //     label: 'Question 5: Are ye one for a fruity finish?',
+    //     options: ['Yes', 'No'],
+
+    // }]
+
+    var question = functions(questions) {
+        this.questions = questions;
+    };
+
+    var strong = new question('Question 1: Do ye like yer drinks strong?');
+    var salty = new question('Question 2: Do ye like it with a salty tang?');
+    var bitter = new question('Question 3: Are ye a lubber who likes it bitter?');
+    var sweet = new question('Question 4: Would ye like a bit of sweetness with yer poison?');
+    var fruity = new question('Question 5: Are ye one for a fruity finish?');
+
+    var ingredients = function(type) {
+        this.type = type;
+    };
+
+    var strongi = new ingredients(['Glug of rum', 'slug of whisky', 'splash of gin']);
+    var saltyi = new ingredients(['Olive on a stick', 'salt-dusted rim', 'rasher of bacon']);
+    var bitteri = new ingredients(['Shake of bitters', 'splash of tonic', 'twist of lemon peel']);
+    var sweeti = new ingredients(['Sugar cube', 'spoonful of honey', 'splash of cola']);
+    var fruityi = new ingredients(['Slice of orange', 'dash of cassis', 'cherry on top']);
+
+    var pantry = function(available) {
+        this.available = available;
+    };
+
+    var preferences = {};
+
+    var bartender = function(drinks) {
+        this.drinks = drinks;
+    };
+
+    bartender.prototype.createDrink = function(length) {
+        var createDrink = {};
+        for (var i = 0; i < length; i++) {
+            createDrink += this.drinks
+        }
+    }
+
+
+
 
     var messages = ["Better luck next time", "Atleast you got a few right", "Almost, you got most of the questions right!", "Good Job you got all the questions right!"];
 
@@ -61,23 +96,23 @@ $(document).ready(function() {
 
 
     $('#Submit').click(function() {
-        var status = 'Incorrect! The correct answer is:'+ " " + questions[current].options[questions[current].answer] + ".";
+        var status = 'Incorrect! The correct answer is:' + " " + questions[current].options[questions[current].answer] + ".";
         if (!$("#myForm input[name=answers]:checked").val()) {
-           alert('Unable to comply, system failure, error, error, error...');
+            alert('Unable to comply, system failure, error, error, error...');
         } else {
-            
-        if (record === questions[current].answer) {
-            score++;
-            status = 'Correct!';
+
+            if (record === questions[current].answer) {
+                score++;
+                status = 'Correct!';
+            }
+            $simple.empty();
+            $simple.append("<h1>" + questions[current].options[questions[current].answer] + "</h1>");
+            $simple.append('<img src=' + questions[current].img + '>');
+            $simple.append('<p>' + status + '</p>');
+            $simple.append("<p>Score:" + score + "out of " + questions.length + "</p>");
+            document.getElementById("Next").style.visibility = "visible";
+            document.getElementById("Submit").style.visibility = "hidden";
         }
-        $simple.empty();
-        $simple.append("<h1>" + questions[current].options[questions[current].answer] + "</h1>");
-        $simple.append('<img src=' + questions[current].img + '>');
-        $simple.append('<p>' + status + '</p>');
-        $simple.append("<p>Score:" + score + "out of " + questions.length + "</p>");
-        document.getElementById("Next").style.visibility = "visible";
-        document.getElementById("Submit").style.visibility = "hidden";
-    }
     })
 
 
@@ -109,7 +144,7 @@ $(document).ready(function() {
             record = null;
             score = 0;
             $("#StatsPage").empty();
-        }, 5000);
+        }, 10000);
 
     }
 

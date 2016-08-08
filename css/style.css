@@ -8,6 +8,7 @@
 h1, h2 {
 	padding: 10px 0;
     text-align: center;
+    color: white;
 }
 
 .centerButtons {
@@ -56,7 +57,7 @@ label {
 }
 
 body {
-	background-image: url("http://history.hanover.edu/texts/1811/Map/bck44btn.jpg");
+	background-image: url("http://api.ning.com/files/qoAIkV3ERSIHsV5FKDumSLBEVW*Qkwc0ENFnI8nFSn2JNliDetpI0Ej4DHfWTjp3fouYzjmhJUbNnjrYH*w55JAGBzuEgmtM/DSC09884.jpg");
 	background-repeat: no-repeat;
 	background-size: 100% 135%;
 	 font: 400 50px/0.8 'Great Vibes', Helvetica, sans-serif;
