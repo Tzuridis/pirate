@@ -1,151 +1,145 @@
-$(document).ready(function() {
-
-    var $simple = $('.simple'),
-        current = 0,
-        record,
-        score = 0;
-
-    // var questions = [{
-    //     label: 'Question 1: Do ye like yer drinks strong?',
-    //     options: ['Yes', 'No'],
-
-    // }, {
-    //     label: 'Question 2: Do ye like it with a salty tang?',
-    //     options: ['Yes', 'No'],
-
-    // }, {
-    //     label: 'Question 3: Are ye a lubber who likes it bitter?',
-    //     options: ['Yes', 'No'],
-
-    // }, {
-    //     label: 'Question 4: Would ye like a bit of sweetness with yer poison?',
-    //     options: ['Yes', 'No'],
-
-    // }, {
-    //     label: 'Question 5: Are ye one for a fruity finish?',
-    //     options: ['Yes', 'No'],
-
-    // }]
-
-    var question = functions(questions) {
-        this.questions = questions;
-    };
-
-    var strong = new question('Question 1: Do ye like yer drinks strong?');
-    var salty = new question('Question 2: Do ye like it with a salty tang?');
-    var bitter = new question('Question 3: Are ye a lubber who likes it bitter?');
-    var sweet = new question('Question 4: Would ye like a bit of sweetness with yer poison?');
-    var fruity = new question('Question 5: Are ye one for a fruity finish?');
-
-    var ingredients = function(type) {
+    var Question = function(type, label) {
+        this.label = label;
         this.type = type;
     };
 
-    var strongi = new ingredients(['Glug of rum', 'slug of whisky', 'splash of gin']);
-    var saltyi = new ingredients(['Olive on a stick', 'salt-dusted rim', 'rasher of bacon']);
-    var bitteri = new ingredients(['Shake of bitters', 'splash of tonic', 'twist of lemon peel']);
-    var sweeti = new ingredients(['Sugar cube', 'spoonful of honey', 'splash of cola']);
-    var fruityi = new ingredients(['Slice of orange', 'dash of cassis', 'cherry on top']);
 
-    var pantry = function(available) {
-        this.available = available;
+    var Ingredient = function(type, contents) {
+        this.contents = contents;
+        this.type = type;
     };
+
+
+    var Pantry = function(strong, salty, bitter, sweet, fruity) {
+        this.strong = strong;
+        this.salty = salty;
+        this.bitter = bitter;
+        this.sweet = sweet;
+        this.fruity = fruity;
+    };
+
+
+
+    var Bartender = function() {
+
+    };
+    Bartender
+
+    Bartender.prototype.createDrink = function(preferences, pantry) {
+        var drink = [];
+        for (var prop in preferences) {
+            console.log(prop)
+            if (preferences[prop]) {
+                drink.push(pantry[prop].contents[Math.floor(Math.random() * pantry[prop].contents.length)]);
+            }
+        }
+        return drink.join(', ');
+    }
 
     var preferences = {};
 
-    var bartender = function(drinks) {
-        this.drinks = drinks;
-    };
+    var strong = new Question('strong', 'Do ye like yer drinks strong?');
+    var salty = new Question('salty', 'Do ye like it with a salty tang?');
+    var bitter = new Question('bitter', 'Are ye a lubber who likes it bitter?');
+    var sweet = new Question('sweet', 'Would ye like a bit of sweetness with yer poison?');
+    var fruity = new Question('fruity', 'Are ye one for a fruity finish?');
 
-    bartender.prototype.createDrink = function(length) {
-        var createDrink = {};
-        for (var i = 0; i < length; i++) {
-            createDrink += this.drinks
-        }
-    }
+    var questions = [strong, salty, bitter, sweet, fruity]
 
+    //
 
+    var strongi = new Ingredient('strong', ['Glug of rum', 'Slug of whisky', 'Splash of gin']);
+    var saltyi = new Ingredient('salty', ['Olive on a stick', 'Salt-dusted rim', 'Rasher of bacon']);
+    var bitteri = new Ingredient('bitter', ['Shake of bitters', 'Splash of tonic', 'Twist of lemon peel']);
+    var sweeti = new Ingredient('sweet', ['Sugar cube', 'Spoonful of honey', 'Splash of cola']);
+    var fruityi = new Ingredient('fruity', ['Slice of orange', 'Dash of cassis', 'Cherry on top']);
 
+    //
 
-    var messages = ["Better luck next time", "Atleast you got a few right", "Almost, you got most of the questions right!", "Good Job you got all the questions right!"];
+    var tedsPantry = new Pantry(strongi, saltyi, bitteri, sweeti, fruityi)
 
+    var bartender = new Bartender();
 
-    $('.Start').click(function() {
-        $('.StartPage').hide();
-        generateQuestion();
-        document.getElementById("simple").style.display = "block";
-        document.getElementById("Submit").style.visibility = "visible";
-    })
+    console.log(tedsPantry)
 
-    function generateQuestion() {
-        $simple.append("<h1>" + questions[current].label + "</h1>")
-        var simpleForm = '<form id="myForm"></form>'
-        var $simpleForm = $(simpleForm)
-        for (var i = 0; i < questions[current].options.length; i++) {
-            $simpleForm.append("<input type='radio' name='answers' class='checkbox' value='" + i + "'  />" + questions[
-                current].options[i] + '</br>')
-        }
-        $simple.append($simpleForm);
-    }
-    $simple.on('click', function() {
-        var radioButtons = $("#myForm input[name=answers]:checked");
-        record = parseInt(radioButtons.val());
-        console.log('record', record)
-    })
+    $(document).ready(function() {
 
-
-
-    $('#Submit').click(function() {
-        var status = 'Incorrect! The correct answer is:' + " " + questions[current].options[questions[current].answer] + ".";
-        if (!$("#myForm input[name=answers]:checked").val()) {
-            alert('Unable to comply, system failure, error, error, error...');
-        } else {
-
-            if (record === questions[current].answer) {
-                score++;
-                status = 'Correct!';
-            }
-            $simple.empty();
-            $simple.append("<h1>" + questions[current].options[questions[current].answer] + "</h1>");
-            $simple.append('<img src=' + questions[current].img + '>');
-            $simple.append('<p>' + status + '</p>');
-            $simple.append("<p>Score:" + score + "out of " + questions.length + "</p>");
-            document.getElementById("Next").style.visibility = "visible";
-            document.getElementById("Submit").style.visibility = "hidden";
-        }
-    })
-
-
-    $('#Next').click(function() {
-        current++;
-        $simple.empty();
-        if (questions.length <= current) {
-            var messageIndex = Math.max(Math.round((score / questions.length) * messages.length) - 1, 0);
-            console.log(messageIndex)
-            $('#StatsPage').append('<p>' + messages[messageIndex] + '</p>')
-            $('#StatsPage').append('<p>' + score + '/' + questions.length + '</p>')
-            document.getElementById("StatsPage").style.visibility = "visible";
-            document.getElementById("Next").style.visibility = "hidden";
-            reset();
-        } else {
-            generateQuestion();
-            document.getElementById("Next").style.visibility = "hidden";
-            document.getElementById("Submit").style.visibility = "visible";
-        }
-    })
-
-    function reset() {
-        setTimeout(function() {
-            $simple.empty();
-            document.getElementById("Next").style.visibility = "hidden";
-            document.getElementById("StatsPage").style.visibility = "hidden";
-            $("#StartPage").show();
-            current = 0;
-            record = null;
+        var $simple = $('.simple'),
+            current = 0,
+            record,
             score = 0;
-            $("#StatsPage").empty();
-        }, 10000);
 
-    }
 
-});
+
+        $('.Start').click(function() {
+            $('.StartPage').hide();
+            generateQuestion();
+            document.getElementById("simple").style.display = "block";
+            document.getElementById("Submit").style.visibility = "visible";
+        })
+
+        function generateQuestion() {
+            $simple.append("<h1>" + questions[current].label + "</h1>")
+            var simpleForm = '<form id="myForm"></form>'
+            var $simpleForm = $(simpleForm)
+                // for (var i = 0; i < questions[current].options.length; i++) {
+            $simpleForm.append("<input type='radio' name='answers' class='checkbox' value='Yes'  /> Yes  </br>")
+            $simpleForm.append("<input type='radio' name='answers' class='checkbox' value='No'  /> No </br>")
+            // }
+            $simple.append($simpleForm);
+        }
+        $simple.on('click', function() {
+            var radioButtons = $("#myForm input[name=answers]:checked");
+            preferences[questions[current].type] = radioButtons.val() == 'Yes';
+            console.log(preferences)
+        })
+
+        $('#Submit').click(function() {
+
+            if (!$("#myForm input[name=answers]:checked").val()) {
+                alert('Answer me question matey...');
+            } else {
+                $simple.empty();
+                $simple.append("<h1>" + questions[current].label + "</h1>");
+                $simple.append('<p>' + status + '</p>');
+
+                $simple.append("<p>Bartender:" + 'Ok I will remember that:' + JSON.stringify(preferences) + "</p>");
+
+                document.getElementById("Next").style.visibility = "visible";
+                document.getElementById("Submit").style.visibility = "hidden";
+            }
+        })
+
+
+        $('#Next').click(function() {
+            current++;
+            $simple.empty();
+            if (questions.length <= current) {
+                var drink = bartender.createDrink(preferences, tedsPantry);
+                $('#StatsPage').append('<p>Ok I\'ll put this in your drink: ' + drink + '</p>')
+                document.getElementById("StatsPage").style.visibility = "visible";
+                document.getElementById("Next").style.visibility = "hidden";
+                reset();
+            } else {
+                generateQuestion();
+                document.getElementById("Next").style.visibility = "hidden";
+                document.getElementById("Submit").style.visibility = "visible";
+            }
+        })
+
+        function reset() {
+            setTimeout(function() {
+                $simple.empty();
+                document.getElementById("Next").style.visibility = "hidden";
+                document.getElementById("StatsPage").style.visibility = "hidden";
+                $("#StartPage").show();
+                current = 0;
+                record = null;
+                score = 0;
+                preferences = {};
+                $("#StatsPage").empty();
+            }, 20000);
+
+        }
+
+    });
