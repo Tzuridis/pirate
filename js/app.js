@@ -65,6 +65,9 @@
     $(document).ready(function() {
 
         var $simple = $('.simple'),
+        $message = $('.message'),
+        $submit = $('.Submit'),
+        $next = $('.Next'),
             current = 0,
             record,
             score = 0;
@@ -103,8 +106,11 @@
                 $simple.append("<h1>" + questions[current].label + "</h1>");
                 $simple.append('<p>' + status + '</p>');
 
-                $simple.append("<p>Bartender:" + 'Ok I will remember that:' + JSON.stringify(preferences) + "</p>");
+                $message.html("<p>Bartender:" + 'Ok I will remember that:' + JSON.stringify(preferences) + "</p>");
 
+                $simple.hide();
+                $message.show();
+                
                 document.getElementById("Next").style.visibility = "visible";
                 document.getElementById("Submit").style.visibility = "hidden";
             }
@@ -122,6 +128,8 @@
                 reset();
             } else {
                 generateQuestion();
+                $simple.show();
+                $message.hide();
                 document.getElementById("Next").style.visibility = "hidden";
                 document.getElementById("Submit").style.visibility = "visible";
             }
